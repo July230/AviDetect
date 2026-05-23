@@ -11,7 +11,7 @@ En el módulo se revisan redes neurolanes de capas densas y convolutivas cuyas f
 
 
 # Descripción del dataset
-El dataset utilizado es [Drone vs Bird:Aerial Object Classification Dataset](https://www.kaggle.com/datasets/muhammadsaoodsarwar/drone-vs-bird) disponible públicamente [Kaggle](kaggle.com) bajo la licencia **Apache 2.0**.
+El dataset utilizado es [Drone vs Bird:Aerial Object Classification Dataset](https://www.kaggle.com/datasets/muhammadsaoodsarwar/drone-vs-bird) disponible públicamente [Kaggle](https://www.kaggle.com) bajo la licencia **Apache 2.0**.
 
 "Kaggle es una plataforma web que reúne la comunidad Data Science más grande del mundo, con más de 536 mil miembros activos en 194 países, recibe más de 150 mil publicaciones por mes, que brindan todas las herramientas y recursos más importantes para progresar al máximo en data science. Kaggle, al igual que Liora, tiene una interfaz Jupyter Notebooks personalizable y sin configuración." (Mary, 2026) 
 
@@ -19,7 +19,15 @@ El dataset contiene dos carpetas con un total de 4106 imágenes:
 * bird: 1607 imágenes de aves en diversos escenarios
 * drone:  2499 imágenes de drones en diversos escenarios
 
+<div align="center">
+  <img src="./resources/kaggleDataset.png" alt="Figura 1: Dataset en Kaggle">
+  <em>Figura 1: Dataset en Kaggle</em>
+</div>
 
+<div align="center">
+  <img src="./resources/kaggleDatasetImages.png" alt="Figura 2: Imágenes en el dataset">
+  <em>Figura 2: Imágenes en el dataset</em>
+</div>
 
 Existen otros datasets que contienen imágenes de drones y aves con el mismo objetivo. Este dataset se eligió puesto que algunas imágenes están en alta resolución y requiere de un espacio en disco de 1.72 GB.
 
