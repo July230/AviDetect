@@ -15,13 +15,13 @@ El dataset utilizado es [Drone vs Bird:Aerial Object Classification Dataset](htt
 
 "Kaggle es una plataforma web que reúne la comunidad Data Science más grande del mundo, con más de 536 mil miembros activos en 194 países, recibe más de 150 mil publicaciones por mes, que brindan todas las herramientas y recursos más importantes para progresar al máximo en data science. Kaggle, al igual que Liora, tiene una interfaz Jupyter Notebooks personalizable y sin configuración." (Mary, 2026) 
 
-El dataset contiene dos carpetas: 
-* bird: Con 1607 imágenes de aves en alta resolución en diversos escenarios
-* drone: Con 2499 imágenes de drones en alta resolución en diversos escenarios
+El dataset contiene dos carpetas con un total de 4106 imágenes: 
+* bird: 1607 imágenes de aves en diversos escenarios
+* drone:  2499 imágenes de drones en diversos escenarios
 
 
 
-Existen otros datasets que contienen imágenes de drones y aves con el mismo objetivo. Este dataset se eligió puesto que contiene imágenes de buena calidad sin alteraciones (ya fuera transformaciones o normalización de color) y requiere de un espacio en disco de 1.72 GB. Otros datasets contienen imagenes con marcas de agua.
+Existen otros datasets que contienen imágenes de drones y aves con el mismo objetivo. Este dataset se eligió puesto que algunas imágenes están en alta resolución y requiere de un espacio en disco de 1.72 GB.
 
 Un dataset alternativo es [Drone-vs-Bird](https://www.kaggle.com/datasets/romsham/dronevsbird-foryolo) igualmente disponible en **Kaggle**, que contiene más imágenes y en alta resolución, sin embargo, requiere de 7.1 GB de espacio en disco.
 
