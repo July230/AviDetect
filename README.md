@@ -50,10 +50,44 @@ Es necesario hacer la separación del dataset en train, validation y test. Típi
 Dado que el dataset está desbalanceado, es esperado que el modelo sea mejor para identificar la clase mayoritaria, es decir, drones. Para mitigar el desbalanceo de clases, se consideró una técnica de oversampling sobre la clase minoritaria, seguido de data augmentation a todas las clases, siguiendo enfoques similares a los propuestos por Guerrero et al. (2024) en su paper [A Data Augmentation Methodology to Reduce the Class Imbalance in Histopathology Images](https://link.springer.com/article/10.1007/s10278-024-01018-9), donde la aumentación dirigida permitió reducir el sesgo hacia las clases mayoritarias en tareas de clasificación de imágenes.
 Es importante destacar que estas alteraciones en el dataset se hacen únicamente en el set de entrenamiento y que previamente se realizó una normalización de color. Los set de validation y test se dejan como están.
 
+### Oversampling
+
+Oversampling (sobremuestreo) es una técnica que duplica o genera nuevas muestras de la clase minoritaria para ayudar al modelo a aprender más patrones.
+
+<div align="center">
+  <img src="./resources/oversampling.png" alt="Figura 3: Oversampling vs Undersampling">
+  <em>Figura 3: Oversampling vs Undersampling</em>
+</div>
+
+Como primer paso para el dataset de train se realizó un método de oversampling aleatorio para balancear el dataset puesto que es sencillo de implementar. Se calcularon las imágenes faltantes y se duplicaron una vez cada una. De este modo no se perdió información.
+
+### Data augmentation
+
+En el contexto de clasificación de imagenes, el data augmetation consiste en aplicar operaciones de matrices con el objetivo de aumentar el número de instancias con transformaciones. Se modificaon los ejemplos actuales para tener más variaciones que funcionen a su vez como más ejemplos.
+
+<div align="center">
+  <img src="./resources/dataAugmentationRandom.png" alt="Figura 4: Data augmentation">
+  <em>Figura 4: Data augmentation</em>
+</div>
+
+Se tomaron como ejemplo los criterios descritos por Orzan, R. I. en su paper, donde la limitada cantidad de imágenes para su estudio, aplicaron las siguientes transformaciones:
+* Reshaping: Las imagenes de entradas son transformadas a 256 x 256 pixeles
+* Reescalamiento: Los valores de los pixeles fueron escalados a un rango de [0, 1] al dividir los valores de los pixeles entre 255.
+* Rotaciones: Las imagenes fueron rotadas aleatoriamente (entre -30 y 30 grados)
+* Espejo horizontal: Las imagenes son volteadas con un 50% de probabilidad
+* Espejo vertical: Las imagenes son volteadas con un 50% de probabilidad
+* Traslaciones: En los ejes X y Y entre -10 y 10 pixeles
+* Escalamiento: Las imagenes se escalaron entre 0.9 y 1.1 veces el tamaño original
+
+
+[CNN TensorFlow](https://www.tensorflow.org/tutorials/images/cnn)
+[Ejemplo](https://www.kaggle.com/code/alfonsonoguera/proyecto-con-cnn-drones-y-p-jaros)
+[Ejemplo Transfer](https://www.kaggle.com/code/ahmedashraf299/birds-vs-drone-using-mobilenetv2-acc-92)
 
 # Referencias
 Escobar Díaz Guerrero, R., Carvalho, L., Bocklitz, T. et al. A Data Augmentation Methodology to Reduce the Class Imbalance in Histopathology Images. J Digit Imaging. Inform. med. 37, 1767–1782 (2024). https://doi.org/10.1007/s10278-024-01018-9
 Galdran, A., Carneiro, G., González Ballester, M.A. (2021). Balanced-MixUp for Highly Imbalanced Medical Image Classification. In: de Bruijne, M., et al. Medical Image Computing and Computer Assisted Intervention – MICCAI 2021. MICCAI 2021. Lecture Notes in Computer Science(), vol 12905. Springer, Cham. https://doi.org/10.1007/978-3-030-87240-3_31
+GeeksforGeeks, “Handling imbalanced data for classification,” GeeksforGeeks, Feb. 02, 2026. https://www.geeksforgeeks.org/machine-learning/handling-imbalanced-data-for-classification/
 Ghazlane, Y., Gmira, M., & Medromi, H. (2024). Development Of A Vision- based Anti-drone Identification Friend Or Foe Model To Recognize Birds And Drones Using Deep Learning. Applied Artificial Intelligence, 38(1), 1–29. https://doi.org/10.1080/08839514.2024.2318672
 Khaliki, M.Z., Başarslan, M.S. Brain tumor detection from images and comparison with transfer learning methods and 3-layer CNN. Sci Rep 14, 2664 (2024). https://doi.org/10.1038/s41598-024-52823-9
 Mary. (2026, February 25). Kaggle: todo lo que hay que saber sobre esta plataforma. Liora. https://liora.io/es/kaggle-todo-lo-que-hay-que-saber-sobre-esta-plataforma
