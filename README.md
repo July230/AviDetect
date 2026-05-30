@@ -61,6 +61,7 @@ Oversampling (sobremuestreo) es una técnica que duplica o genera nuevas muestra
 
 Como primer paso para el dataset de train se realizó un método de oversampling aleatorio para balancear el dataset puesto que es sencillo de implementar. Se calcularon las imágenes faltantes y se duplicaron una vez cada una. De este modo no se perdió información.
 
+
 ### Data augmentation
 
 En el contexto de clasificación de imagenes, el data augmetation consiste en aplicar operaciones de matrices con el objetivo de aumentar el número de instancias con transformaciones. Se modificaon los ejemplos actuales para tener más variaciones que funcionen a su vez como más ejemplos.
@@ -79,12 +80,47 @@ Se tomaron como ejemplo los criterios descritos por Orzan, R. I. en su paper, do
 * Traslaciones: En los ejes X y Y entre -10 y 10 pixeles
 * Escalamiento: Las imagenes se escalaron entre 0.9 y 1.1 veces el tamaño original
 
+## Modelo
 
-[CNN TensorFlow](https://www.tensorflow.org/tutorials/images/cnn)
+Para el problema de clasificación de imágenes se utilizó una Red Neuronal Convolutiva (CNN). Estas redes están específicamente diseñadas para extraer características significativas de datos visuales complejos, como imágenes. La estructura de una CNN, consistiendo en capas convolutivas, pooling layers y capas completamente conectadas, imita el sistema visual humano para reconocer patrones y características jerárquicas. Las capas convolutivas usan operaciones para detectar características locales que son progresivamente abstraidas por las pooling layers que condensan la información. Los resultados son usados en las capas conectadas para tareas de clasificación y regresión.
+
+<div align="center">
+  <img src="./resources/cnn.png" alt="Figura 5: Red Neuronal Convolutiva">
+  <em>Figura 5: Red Neuronal Convolutiva</em>
+</div>
+
+### Descripción del modelo
+
+El modelo se basó en el presentado por Khaliki, M.Z. et al. donde experimentaron con distintos modelos para un problema de clasificación en tumores cerebrales. 
+Este primer modelo fue un modelo secuencial con la siguiente arquitectura:
+
+* Conv2D layer: Con 32 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
+* Pooling layer: Con un tamaño de (2, 2).
+* Conv2D layer: Con 64 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
+* Pooling layer: Con un tamaño de (2, 2)
+* Conv2D layer: Con 128 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
+* Pooling layer: Con un tamaño de (2, 2)
+* Capa Flatten: Convertir en un vector 1D
+* Dense layer: Con 128 neuronas y función de activación ReLU
+* Dense layer: Con 2 neuronas y función de activación softmax
+
+Parámetros:
+* loss: binary_crossentropy
+* Épocas: 14 
+* Optimizador: Adam (0.0001)
+* Batch size: 10
+
+Con las capas convolutivas se convierten las características de dos dimensiones (las imágenes) en matrices con las características más significativas. Pooling layer es usado para reducir las dimensiones espaciales de los mapas de características, haciéndolos computacionalmente más rápidos, reduciendo el uso de memoria y previniendo sobreajuste. Se insertan típicamente después de una capa convolutiva. Posteriormente se convierten en un vector de una dimensión. Las dimensiones de ancho y alto tienden a reducirse a medida que se profundiza en la red. El número de canales de salida para cada capa Conv2D está controlado por el primer argumento. Al tener dos clases (drone y bird), la última capa cuenta con 2 neuronas.
+
+Esta arquitectura es similar a la presentada en la documentación de TensorFlow: [CNN TensorFlow](https://www.tensorflow.org/tutorials/images/cnn)
+
+
 [Ejemplo](https://www.kaggle.com/code/alfonsonoguera/proyecto-con-cnn-drones-y-p-jaros)
 [Ejemplo Transfer](https://www.kaggle.com/code/ahmedashraf299/birds-vs-drone-using-mobilenetv2-acc-92)
 
 # Referencias
+Al Dawasari, H. J., Bilal, M., Moinuddin, M., Arshad, K., & Assaleh, K. (2023). DeepVision: Enhanced Drone Detection and Recognition in Visible Imagery through Deep Learning Networks. Sensors (14248220), 23(21), 8711. https://doi.org/10.3390/s23218711
+Elsaidy, O. M., Moneim, I. A., & Abd El-Latif, E. I. (2026). Detection and classification of UVA using double-way CNN model. Neural Computing & Applications, 38(4), 1–18. https://doi.org/10.1007/s00521-025-11824-z
 Escobar Díaz Guerrero, R., Carvalho, L., Bocklitz, T. et al. A Data Augmentation Methodology to Reduce the Class Imbalance in Histopathology Images. J Digit Imaging. Inform. med. 37, 1767–1782 (2024). https://doi.org/10.1007/s10278-024-01018-9
 Galdran, A., Carneiro, G., González Ballester, M.A. (2021). Balanced-MixUp for Highly Imbalanced Medical Image Classification. In: de Bruijne, M., et al. Medical Image Computing and Computer Assisted Intervention – MICCAI 2021. MICCAI 2021. Lecture Notes in Computer Science(), vol 12905. Springer, Cham. https://doi.org/10.1007/978-3-030-87240-3_31
 GeeksforGeeks, “Handling imbalanced data for classification,” GeeksforGeeks, Feb. 02, 2026. https://www.geeksforgeeks.org/machine-learning/handling-imbalanced-data-for-classification/
