@@ -13,7 +13,7 @@ En el módulo se revisan redes neurolanes de capas densas y convolutivas cuyas f
 # Descripción del dataset
 El dataset utilizado es [Drone vs Bird:Aerial Object Classification Dataset](https://www.kaggle.com/datasets/muhammadsaoodsarwar/drone-vs-bird) disponible públicamente [Kaggle](https://www.kaggle.com) bajo la licencia **Apache 2.0**.
 
-"Kaggle es una plataforma web que reúne la comunidad Data Science más grande del mundo, con más de 536 mil miembros activos en 194 países, recibe más de 150 mil publicaciones por mes, que brindan todas las herramientas y recursos más importantes para progresar al máximo en data science. Kaggle, al igual que Liora, tiene una interfaz Jupyter Notebooks personalizable y sin configuración." (Mary, 2026) 
+"Kaggle es una plataforma web que reúne la comunidad Data Science más grande del mundo, con más de 536 mil miembros activos en 194 países, recibe más de 150 mil publicaciones por mes, que brindan todas las herramientas y recursos más importantes para progresar al máximo en data science. Kaggle, al igual que Liora, tiene una interfaz Jupyter Notebooks personalizable y sin configuración." [1]
 
 <div align="center">
   <img src="./resources/kaggleDataset.png" alt="Figura 1: Dataset en Kaggle">
@@ -37,22 +37,22 @@ El dataset contiene dos carpetas con un total de 4106 imágenes:
 * bird: 1607 imágenes de aves en diversos escenarios
 * drone: 2499 imágenes de drones en diversos escenarios
 
-Es notorio que el dataset está desbalanceado, drones contiene 892 imágenes más que bird, por lo que la proporción es de aproximadamente 60/40 a favor de drones. 
-
-Es necesario hacer la separación del dataset en train, validation y test. Típicamente esta división es 70/15/15 u 80/10/10. Para datasets pequeños como el caso de *Drone vs Bird*, preservar entre 10 y 30% para test suele estar bien. Se utilizó la librería split-folders para hacer la división, finalmente se obtuvo:
+Primero, es necesario hacer la separación del dataset en train, validation y test. Típicamente esta división es 70/15/15 u 80/10/10. Para datasets pequeños como el caso de *Drone vs Bird*, preservar entre 10 y 30% para test suele estar bien. Se utilizó la librería split-folders para hacer la división en disco, finalmente se obtuvo:
 
 * 70% para train
 * 15% para validation
 * 15% para test
 
+Nota: Para que el experimento sea replicable, tanto en el split como otras técnicas se utilizó la semilla 42. Esta semilla se usa en ocasiones como tradición de programadores y científicos de datos. Aparece de la novela de ciencia ficción de Douglas Adams: *La guía del autoestopista galáctico (1979)*. Aquí, la supercomputadora llamada Deep though revela que la respuesta a la gran pregunta de "la vida, el universo y todo lo demás" es 42. Sin embargo, realmente no tiene ninguna ventaja computacional.
+
 ## Preprocesamiento
 
-Dado que el dataset está desbalanceado, es esperado que el modelo sea mejor para identificar la clase mayoritaria, es decir, drones. Para mitigar el desbalanceo de clases, se consideró una técnica de oversampling sobre la clase minoritaria, seguido de data augmentation a todas las clases, siguiendo enfoques similares a los propuestos por Guerrero et al. (2024) en su paper [A Data Augmentation Methodology to Reduce the Class Imbalance in Histopathology Images](https://link.springer.com/article/10.1007/s10278-024-01018-9), donde la aumentación dirigida permitió reducir el sesgo hacia las clases mayoritarias en tareas de clasificación de imágenes.
+Dado que el dataset está desbalanceado a favor de drones, es esperado que el modelo sea mejor para identificar la clase mayoritaria. Para mitigar el desbalanceo de clases, se consideró una técnica de oversampling sobre la clase minoritaria, seguido de data augmentation a todas las clases, siguiendo enfoques similares a los propuestos por Guerrero et al. [1], donde la aumentación dirigida permitió reducir el sesgo hacia las clases mayoritarias en tareas de clasificación de imágenes.
 Es importante destacar que estas alteraciones en el dataset se hacen únicamente en el set de entrenamiento y que previamente se realizó una normalización de color. Los set de validation y test se dejan como están.
 
 ### Oversampling
 
-Oversampling (sobremuestreo) es una técnica que duplica o genera nuevas muestras de la clase minoritaria para ayudar al modelo a aprender más patrones.
+Oversampling (sobremuestreo) es una técnica que duplica o genera nuevas muestras de la clase minoritaria para ayudar al modelo a aprender más patrones. [3]
 
 <div align="center">
   <img src="./resources/oversampling.png" alt="Figura 3: Oversampling vs Undersampling">
@@ -71,12 +71,11 @@ En el contexto de clasificación de imagenes, el data augmetation consiste en ap
   <em>Figura 4: Data augmentation</em>
 </div>
 
-Se tomaron como ejemplo los criterios descritos por Orzan, R. I. en su paper, donde la limitada cantidad de imágenes para su estudio, aplicaron las siguientes transformaciones:
-* Reshaping: Las imagenes de entradas son transformadas a 256 x 256 pixeles
+Se tomaron como ejemplo los criterios descritos por Orzan, R. I. [4] en su paper, donde la limitada cantidad de imágenes para su estudio los llevo a aplicar las siguientes transformaciones:
+* Reshaping: Las imagenes de entradas son transformadas a 224 x 224 pixeles
 * Reescalamiento: Los valores de los pixeles fueron escalados a un rango de [0, 1] al dividir los valores de los pixeles entre 255.
 * Rotaciones: Las imagenes fueron rotadas aleatoriamente (entre -30 y 30 grados)
 * Espejo horizontal: Las imagenes son volteadas con un 50% de probabilidad
-* Espejo vertical: Las imagenes son volteadas con un 50% de probabilidad
 * Traslaciones: En los ejes X y Y entre -10 y 10 pixeles
 * Escalamiento: Las imagenes se escalaron entre 0.9 y 1.1 veces el tamaño original
 
@@ -91,7 +90,7 @@ Para el problema de clasificación de imágenes se utilizó una Red Neuronal Con
 
 ### Descripción del modelo
 
-El modelo se basó en el presentado por Khaliki, M.Z. et al. donde experimentaron con distintos modelos para un problema de clasificación en tumores cerebrales. 
+El modelo se basó en el presentado por Khaliki, M.Z. et al. [5] donde experimentaron con distintos modelos para un problema de clasificación en tumores cerebrales. 
 Este primer modelo fue un modelo secuencial con la siguiente arquitectura:
 
 * Conv2D layer: Con 32 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
@@ -102,7 +101,7 @@ Este primer modelo fue un modelo secuencial con la siguiente arquitectura:
 * Pooling layer: Con un tamaño de (2, 2)
 * Capa Flatten: Convertir en un vector 1D
 * Dense layer: Con 128 neuronas y función de activación ReLU
-* Dense layer: Con 2 neuronas y función de activación softmax
+* Dense layer: Con 1 neurona y función de activación sigmoid
 
 Parámetros:
 * loss: binary_crossentropy
@@ -110,7 +109,7 @@ Parámetros:
 * Optimizador: Adam (0.0001)
 * Batch size: 10
 
-Con las capas convolutivas se convierten las características de dos dimensiones (las imágenes) en matrices con las características más significativas. Pooling layer es usado para reducir las dimensiones espaciales de los mapas de características, haciéndolos computacionalmente más rápidos, reduciendo el uso de memoria y previniendo sobreajuste. Se insertan típicamente después de una capa convolutiva. Posteriormente se convierten en un vector de una dimensión. Las dimensiones de ancho y alto tienden a reducirse a medida que se profundiza en la red. El número de canales de salida para cada capa Conv2D está controlado por el primer argumento. Al tener dos clases (drone y bird), la última capa cuenta con 2 neuronas.
+Con las capas convolutivas se convierten las características de dos dimensiones (las imágenes) en matrices con las características más significativas. Pooling layer es usado para reducir las dimensiones espaciales de los mapas de características, haciéndolos computacionalmente más rápidos, reduciendo el uso de memoria y previniendo sobreajuste. Se insertan típicamente después de una capa convolutiva. Posteriormente se convierten en un vector de una dimensión. Las dimensiones de ancho y alto tienden a reducirse a medida que se profundiza en la red. El número de canales de salida para cada capa Conv2D está controlado por el primer argumento. 
 
 Esta arquitectura es similar a la presentada en la documentación de TensorFlow: [CNN TensorFlow](https://www.tensorflow.org/tutorials/images/cnn)
 
@@ -119,12 +118,12 @@ Esta arquitectura es similar a la presentada en la documentación de TensorFlow:
 [Ejemplo Transfer](https://www.kaggle.com/code/ahmedashraf299/birds-vs-drone-using-mobilenetv2-acc-92)
 
 # Referencias
+[1] Mary, "Kaggle: todo lo que hay que saber sobre esta plataforma," *Liora*, Feb. 25, 2026, [Online]. Available: https://liora.io/es/kaggle-todo-lo-que-hay-que-saber-sobre-esta-plataforma
+[2] R. Escobar Díaz Guerrero, L. Carvalho, T. Bocklitz, J. Popp and J. Luis Oliveira, "A Data Augmentation Methodology to Reduce the Class Imbalance in Histopathology Images," *J. Digit. Imaging Inform. med.* vol. 37, pp. 1767–1782, 2024, doi: https://doi.org/10.1007/s10278-024-01018-9
+[3] GeeksforGeeks, “Handling imbalanced data for classification,” *GeeksforGeeks*, Feb. 02, 2026. [Online]. Available: https://www.geeksforgeeks.org/machine-learning/handling-imbalanced-data-for-classification/
+[4] R. I. Orzan, D. Santa, N. Lorenzovici, T. A. Zareczky, C. Pojoga, R. Agoston, E.-H. Dulf, and A. Seicean, "Deep Learning in Endoscopic Ultrasound: A Breakthrough in Detecting Distal Cholangiocarcinoma," *Cancers*, vol. 16, no. 22, Art. no. 3792, 2024, doi: https://doi.org/10.3390/cancers16223792
+[5] M.Z. Khaliki and M.S. Başarslan, "Brain tumor detection from images and comparison with transfer learning methods and 3-layer CNN," *Scientific Reports*, vol. 14, Art. no. 2664, 2024, doi: https://doi.org/10.1038/s41598-024-52823-9
 Al Dawasari, H. J., Bilal, M., Moinuddin, M., Arshad, K., & Assaleh, K. (2023). DeepVision: Enhanced Drone Detection and Recognition in Visible Imagery through Deep Learning Networks. Sensors (14248220), 23(21), 8711. https://doi.org/10.3390/s23218711
 Elsaidy, O. M., Moneim, I. A., & Abd El-Latif, E. I. (2026). Detection and classification of UVA using double-way CNN model. Neural Computing & Applications, 38(4), 1–18. https://doi.org/10.1007/s00521-025-11824-z
-Escobar Díaz Guerrero, R., Carvalho, L., Bocklitz, T. et al. A Data Augmentation Methodology to Reduce the Class Imbalance in Histopathology Images. J Digit Imaging. Inform. med. 37, 1767–1782 (2024). https://doi.org/10.1007/s10278-024-01018-9
 Galdran, A., Carneiro, G., González Ballester, M.A. (2021). Balanced-MixUp for Highly Imbalanced Medical Image Classification. In: de Bruijne, M., et al. Medical Image Computing and Computer Assisted Intervention – MICCAI 2021. MICCAI 2021. Lecture Notes in Computer Science(), vol 12905. Springer, Cham. https://doi.org/10.1007/978-3-030-87240-3_31
-GeeksforGeeks, “Handling imbalanced data for classification,” GeeksforGeeks, Feb. 02, 2026. https://www.geeksforgeeks.org/machine-learning/handling-imbalanced-data-for-classification/
 Ghazlane, Y., Gmira, M., & Medromi, H. (2024). Development Of A Vision- based Anti-drone Identification Friend Or Foe Model To Recognize Birds And Drones Using Deep Learning. Applied Artificial Intelligence, 38(1), 1–29. https://doi.org/10.1080/08839514.2024.2318672
-Khaliki, M.Z., Başarslan, M.S. Brain tumor detection from images and comparison with transfer learning methods and 3-layer CNN. Sci Rep 14, 2664 (2024). https://doi.org/10.1038/s41598-024-52823-9
-Mary. (2026, February 25). Kaggle: todo lo que hay que saber sobre esta plataforma. Liora. https://liora.io/es/kaggle-todo-lo-que-hay-que-saber-sobre-esta-plataforma
-Orzan, R. I., Santa, D., Lorenzovici, N., Zareczky, T. A., Pojoga, C., Agoston, R., Dulf, E.-H., & Seicean, A. (2024). Deep Learning in Endoscopic Ultrasound: A Breakthrough in Detecting Distal Cholangiocarcinoma. Cancers, 16(22), 3792. https://doi.org/10.3390/cancers16223792
