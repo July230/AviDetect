@@ -43,7 +43,7 @@ Primero, es necesario hacer la separación del dataset en train, validation y te
 * 15% para validation
 * 15% para test
 
-Nota: Para que el experimento sea replicable, tanto en el split como otras técnicas se utilizó la semilla 42. Esta semilla se usa en ocasiones como tradición de programadores y científicos de datos. Aparece de la novela de ciencia ficción de Douglas Adams: *La guía del autoestopista galáctico (1979)*. Aquí, la supercomputadora llamada Deep though revela que la respuesta a la gran pregunta de "la vida, el universo y todo lo demás" es 42. Sin embargo, realmente no tiene ninguna ventaja computacional.
+Nota: Para que el experimento sea replicable, tanto en el split como otras técnicas se utilizó la semilla **42**. Esta semilla se usa en ocasiones como tradición de programadores y científicos de datos. Aparece de la novela de ciencia ficción de Douglas Adams: *La guía del autoestopista galáctico (1979)*. Aquí, la supercomputadora llamada *Deep though* revela que la respuesta a la gran pregunta de "la vida, el universo y todo lo demás" es 42. Sin embargo, realmente no tiene ninguna ventaja computacional.
 
 ## Preprocesamiento
 
@@ -61,10 +61,9 @@ Oversampling (sobremuestreo) es una técnica que duplica o genera nuevas muestra
 
 Como primer paso para el dataset de train se realizó un método de oversampling aleatorio para balancear el dataset puesto que es sencillo de implementar. Se calcularon las imágenes faltantes y se duplicaron una vez cada una. De este modo no se perdió información.
 
-
 ### Data augmentation
 
-En el contexto de clasificación de imagenes, el data augmetation consiste en aplicar operaciones de matrices con el objetivo de aumentar el número de instancias con transformaciones. Se modificaon los ejemplos actuales para tener más variaciones que funcionen a su vez como más ejemplos.
+En el contexto de clasificación de imagenes, data augmetation consiste en aplicar operaciones de matrices con el objetivo de aumentar el número de instancias con transformaciones. Se modificaon los ejemplos actuales para tener más variaciones que funcionen a su vez como más ejemplos.
 
 <div align="center">
   <img src="./resources/dataAugmentationRandom.png" alt="Figura 4: Data augmentation">
@@ -108,17 +107,13 @@ Este primer modelo fue un modelo secuencial con la siguiente arquitectura:
 
 Parámetros:
 * loss: binary_crossentropy
-* Épocas: 14 
-* Optimizador: Adam (0.0001)
-* Batch size: 10
+* Epochs: 14 
+* Optimizer: Adam
+* Batch size: 16
 
 Con las capas convolutivas se convierten las características de dos dimensiones (las imágenes) en matrices con las características más significativas. Pooling layer es usado para reducir las dimensiones espaciales de los mapas de características, haciéndolos computacionalmente más rápidos, reduciendo el uso de memoria y previniendo sobreajuste. Se insertan típicamente después de una capa convolutiva. Posteriormente se convierten en un vector de una dimensión. Las dimensiones de ancho y alto tienden a reducirse a medida que se profundiza en la red. El número de canales de salida para cada capa Conv2D está controlado por el primer argumento. 
 
 Esta arquitectura es similar a la presentada en la documentación de TensorFlow: [CNN TensorFlow](https://www.tensorflow.org/tutorials/images/cnn)
-
-
-[Ejemplo](https://www.kaggle.com/code/alfonsonoguera/proyecto-con-cnn-drones-y-p-jaros)
-[Ejemplo Transfer](https://www.kaggle.com/code/ahmedashraf299/birds-vs-drone-using-mobilenetv2-acc-92)
 
 # Referencias
 [1] Mary, "Kaggle: todo lo que hay que saber sobre esta plataforma," *Liora*, Feb. 25, 2026, [Online]. Available: https://liora.io/es/kaggle-todo-lo-que-hay-que-saber-sobre-esta-plataforma
@@ -127,6 +122,6 @@ Esta arquitectura es similar a la presentada en la documentación de TensorFlow:
 [4] R. I. Orzan, D. Santa, N. Lorenzovici, T. A. Zareczky, C. Pojoga, R. Agoston, E.-H. Dulf, and A. Seicean, "Deep Learning in Endoscopic Ultrasound: A Breakthrough in Detecting Distal Cholangiocarcinoma," *Cancers*, vol. 16, no. 22, Art. no. 3792, 2024, doi: https://doi.org/10.3390/cancers16223792
 [5] Y. Ghazlane, M. Gmira and H. Medromi, "Development Of A Vision- based Anti-drone Identification Friend Or Foe Model To Recognize Birds And Drones Using Deep Learning," *Applied Artificial Intelligence*, vol. 38, no. 1, pp. 1–29, 2024, doi: https://doi.org/10.1080/08839514.2024.2318672
 [6] M.Z. Khaliki and M.S. Başarslan, "Brain tumor detection from images and comparison with transfer learning methods and 3-layer CNN," *Scientific Reports*, vol. 14, Art. no. 2664, 2024, doi: https://doi.org/10.1038/s41598-024-52823-9
-Al Dawasari, H. J., Bilal, M., Moinuddin, M., Arshad, K., & Assaleh, K. (2023). DeepVision: Enhanced Drone Detection and Recognition in Visible Imagery through Deep Learning Networks. Sensors (14248220), 23(21), 8711. https://doi.org/10.3390/s23218711
-Elsaidy, O. M., Moneim, I. A., & Abd El-Latif, E. I. (2026). Detection and classification of UVA using double-way CNN model. Neural Computing & Applications, 38(4), 1–18. https://doi.org/10.1007/s00521-025-11824-z
-Galdran, A., Carneiro, G., González Ballester, M.A. (2021). Balanced-MixUp for Highly Imbalanced Medical Image Classification. In: de Bruijne, M., et al. Medical Image Computing and Computer Assisted Intervention – MICCAI 2021. MICCAI 2021. Lecture Notes in Computer Science(), vol 12905. Springer, Cham. https://doi.org/10.1007/978-3-030-87240-3_31
+[7] H. J. Al Dawasari, M. Bilal, M. Moinuddin, K. Arshad and K. Assaleh, "DeepVision: Enhanced Drone Detection and Recognition in Visible Imagery through Deep Learning Networks," *Sensors*, vol. 23, no. 21, Art. no. 8711, 2023, doi: https://doi.org/10.3390/s23218711
+[8] O. M. Elsaidy, I. A. Moneim and E. I. Abd El-Latif, "Detection and classification of UVA using double-way CNN model," *Neural Computing & Applications*, vol. 38, no. 4, pp. 1–18, 2026, doi: https://doi.org/10.1007/s00521-025-11824-z
+[9] A. Galdran, G. Carneiro and M.A. González Ballester, "Balanced-MixUp for Highly Imbalanced Medical Image Classification," in *Medical Image Computing and Computer Assisted Intervention – MICCAI 2021*, M. de Bruijne et al., Eds., vol. 12905, *Lecture Notes in Computer Science*, Cham, Springer, 2021, doi: https://doi.org/10.1007/978-3-030-87240-3_31
