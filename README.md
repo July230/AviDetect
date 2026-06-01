@@ -7,7 +7,7 @@ En este proyecto se creará un modelo de clasificación de imagenes con la capac
 
 
 # Contexto
-En el módulo se revisan redes neurolanes de capas densas y convolutivas cuyas funciones y parámetros le permitirán al modelo a partir de las imagenes.
+En el módulo se revisan redes neurolanes de capas densas y convolutivas cuyas funciones y parámetros le permitirán al modelo aprender a partir de las imagenes.
 
 
 # Descripción del dataset
@@ -19,11 +19,12 @@ El dataset utilizado es [Drone vs Bird:Aerial Object Classification Dataset](htt
   <img src="./resources/kaggleDataset.png" alt="Figura 1: Dataset en Kaggle">
   <em>Figura 1: Dataset en Kaggle</em>
 </div>
-
+<br>
 <div align="center">
   <img src="./resources/kaggleDatasetImages.png" alt="Figura 2: Imágenes en el dataset">
   <em>Figura 2: Imágenes en el dataset</em>
 </div>
+<br>
 
 Existen otros datasets que contienen imágenes de drones y aves con el mismo objetivo. Este dataset se eligió puesto que algunas imágenes están en alta resolución y requiere de un espacio en disco de 1.72 GB.
 
@@ -58,6 +59,7 @@ Oversampling (sobremuestreo) es una técnica que duplica o genera nuevas muestra
   <img src="./resources/oversampling.png" alt="Figura 3: Oversampling vs Undersampling">
   <em>Figura 3: Oversampling vs Undersampling</em>
 </div>
+<br>
 
 Como primer paso para el dataset de train se realizó un método de oversampling aleatorio para balancear el dataset puesto que es sencillo de implementar. Se calcularon las imágenes faltantes y se duplicaron una vez cada una. De este modo no se perdió información.
 
@@ -69,6 +71,7 @@ En el contexto de clasificación de imagenes, data augmetation consiste en aplic
   <img src="./resources/dataAugmentationRandom.png" alt="Figura 4: Data augmentation">
   <em>Figura 4: Data augmentation</em>
 </div>
+<br>
 
 Siguiendo la estrategia mencionada anteriormente, se aplicaron técnicas de data augmentation. Para ello, se tomaron como referencia los criterios descritos por Orzan et al. [4], quienes emplearon transformaciones geométricas para incrementar la diversidad de imágenes durante el entrenamiento. Las transformaciones aplicadas fueron las siguientes:
 
@@ -92,7 +95,7 @@ Para el problema de clasificación de imágenes se utilizó una Red Neuronal Con
 
 ### Descripción del modelo
 
-El modelo se basó en el presentado por Khaliki, M.Z. et al. [6] donde experimentaron con distintos modelos para un problema de clasificación en tumores cerebrales. 
+El modelo se basó en el presentado por Khaliki, M.Z. et al. [6] donde experimentaron con distintos modelos para un problema de clasificación en tumores cerebrales. El objetivo fue investigar el rendimiento de una red neuronal construida desde cero frente a modelos preentrenados como VGG16, VGG19, InceptionV3, EfficientNetB4, etc.
 Este primer modelo fue un modelo secuencial con la siguiente arquitectura:
 
 * Conv2D layer: Con 32 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
@@ -115,6 +118,45 @@ Con las capas convolutivas se convierten las características de dos dimensiones
 
 Esta arquitectura es similar a la presentada en la documentación de TensorFlow: [CNN TensorFlow](https://www.tensorflow.org/tutorials/images/cnn)
 
+Con esto se evaluó si una arquitectura más simple y sin conocimiento previo era capaz de obtener buenos resultados en la clasificación de imágenes de aves y drones.
+
+### Resultados
+
+Los resultados fueron medidos para el mejor modelo en toda la historia de las 14 épocas.
+
+| Métrica   | Train | Validation | Test   |
+|---------- | ----- | ---------- | ------ |
+| Loss      | 0.35  |   93.87    | 88.12  |
+| Acuracy   | 0.84  |    0.54    | 0.53   |
+| Precision |       |    0.92    | 0.93   |
+| Recall    |       |    0.26    | 0.25   |
+| F1-score  |       |    0.33    | 0.40   |
+
+### Matrices de confusión
+
+<div align="center">
+  <img src="./resources/confusionMatrixValThreeLayerCNN.png" alt="Figura 6: Matriz de confusión del conjunto de validación">
+  <em>Figura 6: Matriz de confusión del conjunto de validación</em>
+</div>
+<br>
+<div align="center">
+  <img src="./resources/confusionMatrixTestThreeLayerCNN.png" alt="Figura 7: Matriz de confusión del conjunto de prueba">
+  <em>Figura 7: Matriz de confusión del conjunto de prueba</em>
+</div>
+<br>
+
+El modelo tuvo un desempeño deficiente en la tarea de clasificación entre aves y drones. Las métricas de evaluación empleadas muestran un comportamiento consistente entre los conjuntos de validación y prueba con valores de accuracy cercanos al 50%, lo que indica una capacidad limitada al discriminar entre ambas clases. 
+
+En los conjuntos de validación y prueba casi no se registraron Falsos positivos, lo que llevó a una precisión aproximada de 92%. Sin embargo, el recall fue muy bajo, lo que significa que la mayoría de los drones fueron clasificados erróneamente como aves.
+
+Estos resultados implican que el modelo detecta correctamente la clase bird pero no detecta una gran cantidad de instancias de la clase drone. En consecuencia, el valor de F1-score permanece bajo, lo que revela un equilibrio deficiente.
+
+Los resultados evidencian un problema de subajuste, ya que el redimiento es similar en los tres conjuntos. El modelo presenta dificultades para aprender características que permitan separar adecuadamente ambas clases, es decir, su capacidad de generalización es insuficiente.
+
+Comparándolo con el estado del arte en el problema de clasificación de aves y drones [5] [7] [8], el modelo actual no es lo suficientemente complejo para llegar a una buena solución.
+
+Basado en estas observaciones, los siguientes pasos propuestos son incrementar la complejidad del modelo o manejo de hiperparámetros de forma que la dificultad del problema sea mejor tratada.
+
 # Referencias
 [1] Mary, "Kaggle: todo lo que hay que saber sobre esta plataforma," *Liora*, Feb. 25, 2026, [Online]. Available: https://liora.io/es/kaggle-todo-lo-que-hay-que-saber-sobre-esta-plataforma
 
@@ -124,7 +166,7 @@ Esta arquitectura es similar a la presentada en la documentación de TensorFlow:
 
 [4] R. I. Orzan, D. Santa, N. Lorenzovici, T. A. Zareczky, C. Pojoga, R. Agoston, E.-H. Dulf, and A. Seicean, "Deep Learning in Endoscopic Ultrasound: A Breakthrough in Detecting Distal Cholangiocarcinoma," *Cancers*, vol. 16, no. 22, Art. no. 3792, 2024, doi: https://doi.org/10.3390/cancers16223792
 
-[5] Y. Ghazlane, M. Gmira and H. Medromi, "Development Of A Vision- based Anti-drone Identification Friend Or Foe Model To Recognize Birds And Drones Using Deep Learning," *Applied Artificial Intelligence*, vol. 38, no. 1, pp. 1–29, 2024, doi: https://doi.org/10.1080/08839514.2024.2318672
+[5] Y. Ghazlane, M. Gmira and H. Medromi, "Development Of A Vision-based Anti-drone Identification Friend Or Foe Model To Recognize Birds And Drones Using Deep Learning," *Applied Artificial Intelligence*, vol. 38, no. 1, pp. 1–29, 2024, doi: https://doi.org/10.1080/08839514.2024.2318672
 
 [6] M.Z. Khaliki and M.S. Başarslan, "Brain tumor detection from images and comparison with transfer learning methods and 3-layer CNN," *Scientific Reports*, vol. 14, Art. no. 2664, 2024, doi: https://doi.org/10.1038/s41598-024-52823-9
 
