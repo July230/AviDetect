@@ -46,6 +46,17 @@ Primero, es necesario hacer la separación del dataset en train, validation y te
 
 Nota: Para que el experimento sea replicable, tanto en el split como otras técnicas se utilizó la semilla **42**. Esta semilla se usa en ocasiones como tradición de programadores y científicos de datos. Aparece de la novela de ciencia ficción de Douglas Adams: *La guía del autoestopista galáctico (1979)*. Aquí, la supercomputadora llamada *Deep though* revela que la respuesta a la gran pregunta de "la vida, el universo y todo lo demás" es 42. Sin embargo, realmente no tiene ninguna ventaja computacional.
 
+Tras el split, el dataset contuvo la siguiente cantidad de imágenes:
+* Train
+  * Bird: 1124
+  * Drone: 1749
+* Validation:
+  * Bird: 242
+  * Drone: 376
+* Test: 
+  * Bird: 241
+  * Drone: 374
+
 ## Preprocesamiento
 
 Dado que el dataset está desbalanceado a favor de drones, es esperable que el modelo tienda a favorecer la clase mayoritaria durante el entrenamiento. Para mitigar el desbalanceo de clases, se aplicó una estrategia de oversampling aleatorio sobre la clase minoritaria, seguida de técnicas de data augmentation orientadas a incrementar la variabilidad de ambas clases. Esta estrategia sigue enfoques similares a los propuestos por Guerrero et al. [1], donde la aumentación dirigida permitió reducir el sesgo hacia las clases mayoritarias en tareas de clasificación de imágenes.
@@ -62,6 +73,8 @@ Oversampling (sobremuestreo) es una técnica que duplica o genera nuevas muestra
 <br>
 
 Como primer paso para el dataset de train se realizó un método de oversampling aleatorio para balancear el dataset puesto que es sencillo de implementar. Se calcularon las imágenes faltantes y se duplicaron una vez cada una. De este modo no se perdió información.
+
+Tras aplicar el oversampling, la cantidad de imagenes de la clase bird en el conjunto de entrenamientos se igualo a la clase drone.
 
 ### Data augmentation
 
