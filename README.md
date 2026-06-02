@@ -121,7 +121,7 @@ Este primer modelo fue un modelo secuencial con la siguiente arquitectura:
 * Dense layer: Con 128 neuronas y función de activación ReLU
 * Dense layer: Con 1 neurona y función de activación sigmoid
 
-Parámetros:
+Hiperparámetros:
 * loss: binary_crossentropy
 * Epochs: 14 
 * Optimizer: Adam
