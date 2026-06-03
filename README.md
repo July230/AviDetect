@@ -60,7 +60,7 @@ Tras el split, el dataset contuvo la siguiente cantidad de imágenes:
 ## Preprocesamiento
 
 Dado que el dataset está desbalanceado a favor de drones, es esperable que el modelo tienda a favorecer la clase mayoritaria durante el entrenamiento. Para mitigar el desbalanceo de clases, se aplicó una estrategia de oversampling aleatorio sobre la clase minoritaria, seguida de técnicas de data augmentation orientadas a incrementar la variabilidad de ambas clases. Esta estrategia sigue enfoques similares a los propuestos por Guerrero et al. [1], donde la aumentación dirigida permitió reducir el sesgo hacia las clases mayoritarias en tareas de clasificación de imágenes.
-Es importante destacar que estas transformaciones se aplicaron exclusivamente al conjunto de entrenamiento con el fin de evitar duga de información hacia los conjuntos de validación y prueba. Por consiguiente, los conjuntos de validación y prueba se mantuvieron sin modificaciones y se utilizaron únicamente para evaluar la capacidad de generalización del modelo.
+Es importante destacar que estas transformaciones se aplicaron exclusivamente al conjunto de entrenamiento con el fin de evitar fuga de información hacia los conjuntos de validación y prueba. Por consiguiente, los conjuntos de validación y prueba se mantuvieron sin modificaciones y se utilizaron únicamente para evaluar la capacidad de generalización del modelo.
 
 ### Oversampling
 
@@ -160,6 +160,8 @@ Los resultados fueron medidos para el mejor modelo en toda la historia de las 14
 </div>
 <br>
 
+### Conclusiones y siguientes pasos
+
 El modelo tuvo un desempeño deficiente en la tarea de clasificación entre aves y drones. Las métricas de evaluación empleadas muestran un comportamiento consistente entre los conjuntos de validación y prueba con valores de accuracy cercanos al 50%, lo que indica una capacidad limitada al discriminar entre ambas clases. 
 
 En los conjuntos de validación y prueba casi no se registraron Falsos positivos, lo que llevó a una precisión aproximada de 92%. Sin embargo, el recall fue muy bajo, lo que significa que la mayoría de los drones fueron clasificados erróneamente como aves.
@@ -201,7 +203,32 @@ Hiperparámetros:
 
 La tasa de 0.001 permitió actualizaciones de peso más precisas, proporcionando mayor estabilidad y una mejor convergencia hacia la solución global. La adición de capas dropout tiene como objetivo combatir sobreajuste en el entrenamiento, estas capas obligan a la red a aprender representaciones robustas y generalizables a datos no vistos. Se aumentó el tamaño de batch a 32, tamaños más pequeños producían resultados más inestables.
 
+### Resultados
 
+Los resultados fueron medidos para el mejor modelo en toda la historia de las 14 épocas.
+
+| Métrica   | Train | Validation | Test   |
+|---------- | ----- | ---------- | ------ |
+| Loss      | 0.39  |   20.30    | 14.85  |
+| Acuracy   | 0.80  |    0.78    | 0.79   |
+| Precision |       |    0.87    | 0.87   |
+| Recall    |       |    0.75    | 0.77   |
+| F1-score  |       |    0.80    | 0.82   |
+
+### Matrices de confusión
+
+<div align="center">
+  <img src="./resources/confusionMatrixValThreeLayerCNNTunned.png" alt="Figura 8: Matriz de confusión del conjunto de validación">
+  <em>Figura 8: Matriz de confusión del conjunto de validación</em>
+</div>
+<br>
+<div align="center">
+  <img src="./resources/confusionMatrixTestThreeLayerCNNTunned.png" alt="Figura 9: Matriz de confusión del conjunto de prueba">
+  <em>Figura 9: Matriz de confusión del conjunto de prueba</em>
+</div>
+<br>
+
+### Conclusiones y siguientes pasos
 
 # Referencias
 [1] Mary, "Kaggle: todo lo que hay que saber sobre esta plataforma," *Liora*, Feb. 25, 2026, [Online]. Available: https://liora.io/es/kaggle-todo-lo-que-hay-que-saber-sobre-esta-plataforma
