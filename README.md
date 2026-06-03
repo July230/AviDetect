@@ -178,7 +178,8 @@ Basado en estas observaciones, los siguientes pasos propuestos son incrementar l
 
 ### Descripción del modelo
 
-Se partió de la arquitectura inicial, agregando cambios en la arquitectura y ajustando hiperparámetros. Para este ajuste se consideraron las conclusiones hechas S. M. Hussain [9], donde destacan la importancia de la optimización de hiperparámetros, permitiendo que un modelo con arquitectura ligera supere a modelos mucho más profundos como VGG19 o RestNet en el problema de detección de tumores cerebrales. El modelo tiene la siguiente arquitectura.
+Se partió de la arquitectura inicial, agregando cambios en la arquitectura y ajustando hiperparámetros. Para este ajuste se consideraron las conclusiones hechas S. M. Hussain et al. [9], donde destacaron la importancia de la optimización de hiperparámetros, permitiendo que un modelo con arquitectura ligera supere a modelos mucho más profundos como VGG19 o RestNet en el problema de detección de tumores cerebrales. 
+El modelo tiene la siguiente arquitectura:
 
 * Conv2D layer: Con 32 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
 * Pooling layer: Con un tamaño de (2, 2).
@@ -229,6 +230,17 @@ Los resultados fueron medidos para el mejor modelo en toda la historia de las 14
 <br>
 
 ### Conclusiones y siguientes pasos
+El modelo tuvo un mejor desempeño en la tarea de clasificación entre aves y drones. Similar al modelo anterior, las métricas muestran un comportamiento similar en los conjuntos de validación y prueba, ahora con valores cercanos al 79%, lo que indica una mejor capacidad al discriminar entre ambas clases.
+
+En los conjuntos de validación y prueba se registraron más falsos positivos, lo que llevó a una precisión aproximada de 87%. Sin embargo, en esta ocasión el recall aumentó considerablemente hasta alcanzar valores cercanos al 76%, lo que significa que hubo más drones identificados correctamente pero al mismo tiempo hubo más aves clasificadas incorrectamente.
+
+Estos resultados implican que el modelo tiene una mejor capacidad de generalización con respecto al anterior, balanceando la tasa de falsos positivos y falsos negativos. En consecuencia, el valor de F1-score aumento, lo que revela un equilibrio mejor.
+
+La incorporación de dropout layers en conjunto al cambio de tamaño de batch y establecimiento de un learning rate fijo llevó a que el modelo desarrollara una mejor capacidad de generalización.
+
+Sin embargo, comparándolo con el estado del arte en el problema de clasificación de aves y drones [5] [7] [8], el modelo continua siendo insuficiente para llegar a una buena solución.
+
+Basado en estas observaciones, los siguientes pasos propuestos son incrementar la complejidad del modelo mediante la incorporación de aprendizaje transferido usando alguna de las arquitecturas existentes como VGG16, VGG19, InceptionV3, RestNet, EfficientNetB4, entre otros.
 
 # Referencias
 [1] Mary, "Kaggle: todo lo que hay que saber sobre esta plataforma," *Liora*, Feb. 25, 2026, [Online]. Available: https://liora.io/es/kaggle-todo-lo-que-hay-que-saber-sobre-esta-plataforma
