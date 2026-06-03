@@ -97,7 +97,9 @@ Siguiendo la estrategia mencionada anteriormente, se aplicaron técnicas de data
 
 El tamaño de 224 x 224 fue tomando como referencia el trabajo de Ghazlane et al. [5], quienes emplearon imágenes de entrada con dichas dimensiones en una tarea de clasificación entre aves y drones basada en redes neuronales convolutivas.
 
-## Modelo
+# Modelo
+
+## Primera iteración
 
 Para el problema de clasificación de imágenes se utilizó una Red Neuronal Convolutiva (CNN). Estas redes están específicamente diseñadas para extraer características significativas de datos visuales complejos, como imágenes. La estructura de una CNN, consistiendo en capas convolutivas, pooling layers y capas completamente conectadas, imita el sistema visual humano para reconocer patrones y características jerárquicas. Las capas convolutivas usan operaciones para detectar características locales que son progresivamente abstraidas por las pooling layers que condensan la información. Los resultados son usados en las capas conectadas para tareas de clasificación y regresión.
 
@@ -170,6 +172,37 @@ Comparándolo con el estado del arte en el problema de clasificación de aves y 
 
 Basado en estas observaciones, los siguientes pasos propuestos son incrementar la complejidad del modelo o manejo de hiperparámetros de forma que la dificultad del problema sea mejor tratada.
 
+## Segunda iteración
+
+### Descripción del modelo
+
+Se partió de la arquitectura inicial, agregando cambios en la arquitectura y ajustando hiperparámetros. Para este ajuste se consideraron las conclusiones hechas S. M. Hussain [9], donde destacan la importancia de la optimización de hiperparámetros, permitiendo que un modelo con arquitectura ligera supere a modelos mucho más profundos como VGG19 o RestNet en el problema de detección de tumores cerebrales. El modelo tiene la siguiente arquitectura.
+
+* Conv2D layer: Con 32 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
+* Pooling layer: Con un tamaño de (2, 2).
+* Dropout layer: Con una tasa de 0.16
+* Conv2D layer: Con 64 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
+* Pooling layer: Con un tamaño de (2, 2)
+* Dropout layer: Con una tasa de 0.16
+* Conv2D layer: Con 128 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
+* Pooling layer: Con un tamaño de (2, 2)
+* Dropout layer: Con una tasa de 0.16
+* Capa Flatten: Convertir en un vector 1D
+* Dense layer: Con 128 neuronas y función de activación ReLU
+* Dropout layer: Con una tasa de 0.16
+* Dense layer: Con 1 neurona y función de activación sigmoid
+
+Hiperparámetros:
+* loss: binary_crossentropy
+* Epochs: 14
+* Optimizer: Adam
+* learning rate: 0.001
+* Batch size: 32
+
+La tasa de 0.001 permitió actualizaciones de peso más precisas, proporcionando mayor estabilidad y una mejor convergencia hacia la solución global. La adición de capas dropout tiene como objetivo combatir sobreajuste en el entrenamiento, estas capas obligan a la red a aprender representaciones robustas y generalizables a datos no vistos. Se aumentó el tamaño de batch a 32, tamaños más pequeños producían resultados más inestables.
+
+
+
 # Referencias
 [1] Mary, "Kaggle: todo lo que hay que saber sobre esta plataforma," *Liora*, Feb. 25, 2026, [Online]. Available: https://liora.io/es/kaggle-todo-lo-que-hay-que-saber-sobre-esta-plataforma
 
@@ -186,3 +219,5 @@ Basado en estas observaciones, los siguientes pasos propuestos son incrementar l
 [7] H. J. Al Dawasari, M. Bilal, M. Moinuddin, K. Arshad and K. Assaleh, "DeepVision: Enhanced Drone Detection and Recognition in Visible Imagery through Deep Learning Networks," *Sensors*, vol. 23, no. 21, Art. no. 8711, 2023, doi: https://doi.org/10.3390/s23218711
 
 [8] O. M. Elsaidy, I. A. Moneim and E. I. Abd El-Latif, "Detection and classification of UVA using double-way CNN model," *Neural Computing & Applications*, vol. 38, no. 4, pp. 1–18, 2026, doi: https://doi.org/10.1007/s00521-025-11824-z
+
+[9] S. M. Hussain, J. S. U. Rahman, F. Akram, M. A. Asghar and R. Majid Mehmood, "Hyperparameter Optimization of Convolutional Neural Networks for Robust Tumor Image Classification," *Diagnostics*, vol. 16, no. 8, Art. no. 1215, 2026, doi: https://doi.org/10.3390/diagnostics16081215
