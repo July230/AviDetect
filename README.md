@@ -60,7 +60,7 @@ Tras el split, el dataset contuvo la siguiente cantidad de imágenes:
 ## Preprocesamiento
 
 Dado que el dataset está desbalanceado a favor de drones, es esperable que el modelo tienda a favorecer la clase mayoritaria durante el entrenamiento. Para mitigar el desbalanceo de clases, se aplicó una estrategia de oversampling aleatorio sobre la clase minoritaria, seguida de técnicas de data augmentation orientadas a incrementar la variabilidad de ambas clases. Esta estrategia sigue enfoques similares a los propuestos por Guerrero et al. [1], donde la aumentación dirigida permitió reducir el sesgo hacia las clases mayoritarias en tareas de clasificación de imágenes.
-Es importante destacar que estas transformaciones se aplicaron exclusivamente al conjunto de entrenamiento con el fin de evitar duga de información hacia los conjuntos de validación y prueba. Por consiguiente, los conjuntos de validación y prueba se mantuvieron sin modificaciones y se utilizaron únicamente para evaluar la capacidad de generalización del modelo.
+Es importante destacar que estas transformaciones se aplicaron exclusivamente al conjunto de entrenamiento con el fin de evitar fuga de información hacia los conjuntos de validación y prueba. Por consiguiente, los conjuntos de validación y prueba se mantuvieron sin modificaciones y se utilizaron únicamente para evaluar la capacidad de generalización del modelo.
 
 ### Oversampling
 
@@ -97,7 +97,9 @@ Siguiendo la estrategia mencionada anteriormente, se aplicaron técnicas de data
 
 El tamaño de 224 x 224 fue tomando como referencia el trabajo de Ghazlane et al. [5], quienes emplearon imágenes de entrada con dichas dimensiones en una tarea de clasificación entre aves y drones basada en redes neuronales convolutivas.
 
-## Modelo
+# Modelo
+
+## Primera iteración
 
 Para el problema de clasificación de imágenes se utilizó una Red Neuronal Convolutiva (CNN). Estas redes están específicamente diseñadas para extraer características significativas de datos visuales complejos, como imágenes. La estructura de una CNN, consistiendo en capas convolutivas, pooling layers y capas completamente conectadas, imita el sistema visual humano para reconocer patrones y características jerárquicas. Las capas convolutivas usan operaciones para detectar características locales que son progresivamente abstraidas por las pooling layers que condensan la información. Los resultados son usados en las capas conectadas para tareas de clasificación y regresión.
 
@@ -121,7 +123,7 @@ Este primer modelo fue un modelo secuencial con la siguiente arquitectura:
 * Dense layer: Con 128 neuronas y función de activación ReLU
 * Dense layer: Con 1 neurona y función de activación sigmoid
 
-Parámetros:
+Hiperparámetros:
 * loss: binary_crossentropy
 * Epochs: 14 
 * Optimizer: Adam
@@ -158,6 +160,8 @@ Los resultados fueron medidos para el mejor modelo en toda la historia de las 14
 </div>
 <br>
 
+### Conclusiones y siguientes pasos
+
 El modelo tuvo un desempeño deficiente en la tarea de clasificación entre aves y drones. Las métricas de evaluación empleadas muestran un comportamiento consistente entre los conjuntos de validación y prueba con valores de accuracy cercanos al 50%, lo que indica una capacidad limitada al discriminar entre ambas clases. 
 
 En los conjuntos de validación y prueba casi no se registraron Falsos positivos, lo que llevó a una precisión aproximada de 92%. Sin embargo, el recall fue muy bajo, lo que significa que la mayoría de los drones fueron clasificados erróneamente como aves.
@@ -169,6 +173,74 @@ Los resultados evidencian un problema de subajuste, ya que el redimiento es simi
 Comparándolo con el estado del arte en el problema de clasificación de aves y drones [5] [7] [8], el modelo actual no es lo suficientemente complejo para llegar a una buena solución.
 
 Basado en estas observaciones, los siguientes pasos propuestos son incrementar la complejidad del modelo o manejo de hiperparámetros de forma que la dificultad del problema sea mejor tratada.
+
+## Segunda iteración
+
+### Descripción del modelo
+
+Se partió de la arquitectura inicial, agregando cambios en la arquitectura y ajustando hiperparámetros. Para este ajuste se consideraron las conclusiones hechas S. M. Hussain et al. [9], donde destacaron la importancia de la optimización de hiperparámetros, permitiendo que un modelo con arquitectura ligera supere a modelos mucho más profundos como VGG19 o RestNet en el problema de detección de tumores cerebrales. 
+El modelo tiene la siguiente arquitectura:
+
+* Conv2D layer: Con 32 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
+* Pooling layer: Con un tamaño de (2, 2).
+* Dropout layer: Con una tasa de 0.16
+* Conv2D layer: Con 64 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
+* Pooling layer: Con un tamaño de (2, 2)
+* Dropout layer: Con una tasa de 0.16
+* Conv2D layer: Con 128 filtros, tamaño de kernel de (3, 3), y función de activación ReLU
+* Pooling layer: Con un tamaño de (2, 2)
+* Dropout layer: Con una tasa de 0.16
+* Capa Flatten: Convertir en un vector 1D
+* Dense layer: Con 128 neuronas y función de activación ReLU
+* Dropout layer: Con una tasa de 0.16
+* Dense layer: Con 1 neurona y función de activación sigmoid
+
+Hiperparámetros:
+* loss: binary_crossentropy
+* Epochs: 14
+* Optimizer: Adam
+* learning rate: 0.001
+* Batch size: 32
+
+La tasa de 0.001 permitió actualizaciones de peso más precisas, proporcionando mayor estabilidad y una mejor convergencia hacia la solución global. La adición de capas dropout tiene como objetivo combatir sobreajuste en el entrenamiento, estas capas obligan a la red a aprender representaciones robustas y generalizables a datos no vistos. Se aumentó el tamaño de batch a 32, tamaños más pequeños producían resultados más inestables.
+
+### Resultados
+
+Los resultados fueron medidos para el mejor modelo en toda la historia de las 14 épocas.
+
+| Métrica   | Train | Validation | Test   |
+|---------- | ----- | ---------- | ------ |
+| Loss      | 0.39  |   20.30    | 14.85  |
+| Acuracy   | 0.80  |    0.78    | 0.79   |
+| Precision |       |    0.87    | 0.87   |
+| Recall    |       |    0.75    | 0.77   |
+| F1-score  |       |    0.80    | 0.82   |
+
+### Matrices de confusión
+
+<div align="center">
+  <img src="./resources/confusionMatrixValThreeLayerCNNTunned.png" alt="Figura 8: Matriz de confusión del conjunto de validación">
+  <em>Figura 8: Matriz de confusión del conjunto de validación</em>
+</div>
+<br>
+<div align="center">
+  <img src="./resources/confusionMatrixTestThreeLayerCNNTunned.png" alt="Figura 9: Matriz de confusión del conjunto de prueba">
+  <em>Figura 9: Matriz de confusión del conjunto de prueba</em>
+</div>
+<br>
+
+### Conclusiones y siguientes pasos
+El modelo tuvo un mejor desempeño en la tarea de clasificación entre aves y drones. Similar al modelo anterior, las métricas muestran un comportamiento similar en los conjuntos de validación y prueba, ahora con valores cercanos al 79%, lo que indica una mejor capacidad al discriminar entre ambas clases.
+
+En los conjuntos de validación y prueba se registraron más falsos positivos, lo que llevó a una precisión aproximada de 87%. Sin embargo, en esta ocasión el recall aumentó considerablemente hasta alcanzar valores cercanos al 76%, lo que significa que hubo más drones identificados correctamente pero al mismo tiempo hubo más aves clasificadas incorrectamente.
+
+Estos resultados implican que el modelo tiene una mejor capacidad de generalización con respecto al anterior, balanceando la tasa de falsos positivos y falsos negativos. En consecuencia, el valor de F1-score aumento, lo que revela un equilibrio mejor.
+
+La incorporación de dropout layers en conjunto al cambio de tamaño de batch y establecimiento de un learning rate fijo llevó a que el modelo desarrollara una mejor capacidad de generalización.
+
+Sin embargo, comparándolo con el estado del arte en el problema de clasificación de aves y drones [5] [7] [8], el modelo continua siendo insuficiente para llegar a una buena solución.
+
+Basado en estas observaciones, los siguientes pasos propuestos son incrementar la complejidad del modelo mediante la incorporación de aprendizaje transferido usando alguna de las arquitecturas existentes como VGG16, VGG19, InceptionV3, RestNet, EfficientNetB4, entre otros.
 
 # Referencias
 [1] Mary, "Kaggle: todo lo que hay que saber sobre esta plataforma," *Liora*, Feb. 25, 2026, [Online]. Available: https://liora.io/es/kaggle-todo-lo-que-hay-que-saber-sobre-esta-plataforma
@@ -186,3 +258,5 @@ Basado en estas observaciones, los siguientes pasos propuestos son incrementar l
 [7] H. J. Al Dawasari, M. Bilal, M. Moinuddin, K. Arshad and K. Assaleh, "DeepVision: Enhanced Drone Detection and Recognition in Visible Imagery through Deep Learning Networks," *Sensors*, vol. 23, no. 21, Art. no. 8711, 2023, doi: https://doi.org/10.3390/s23218711
 
 [8] O. M. Elsaidy, I. A. Moneim and E. I. Abd El-Latif, "Detection and classification of UVA using double-way CNN model," *Neural Computing & Applications*, vol. 38, no. 4, pp. 1–18, 2026, doi: https://doi.org/10.1007/s00521-025-11824-z
+
+[9] S. M. Hussain, J. S. U. Rahman, F. Akram, M. A. Asghar and R. Majid Mehmood, "Hyperparameter Optimization of Convolutional Neural Networks for Robust Tumor Image Classification," *Diagnostics*, vol. 16, no. 8, Art. no. 1215, 2026, doi: https://doi.org/10.3390/diagnostics16081215
