@@ -243,13 +243,10 @@ Sin embargo, comparándolo con el estado del arte en el problema de clasificaci�
 Basado en estas observaciones, los siguientes pasos propuestos son incrementar la complejidad del modelo mediante la incorporación de aprendizaje transferido usando alguna de las arquitecturas existentes como VGG16, VGG19, InceptionV3, ResNet, EfficientNetB4, entre otros.
 
 ## Tercera iteración
-Se realizaron experimentos con los modelos preentrenados InceptionV3, ResNet50 y VGG19 [5] [6] [9], con la misma arquitectura. De los tres, VGG19 obtuvo resultados mejores y estables.
+Se realizaron experimentos con los modelos preentrenados InceptionV3, ResNet50 y VGG19, las cuales se eligieron puesto a que se utilizaron en los experimentos [5] [6] [9] y a que son más ligeras a comparación de otras como DenseNet121, DenseNet201, EfficientNetB1 y EfficientNetB6. De los tres, VGG19 obtuvo resultados mejores y estables.
 
 ### Descripción del modelo
 La arquitectura VGG se erige como un notable modelo CNN introducido por los investigadores Karen Simonyan y Andrew Zisserman en su paper *Very deep convolutional networks for large-scale image recognition*. Se basa en su predecesor, el modelo AlexNet. Ha alcanzado una precisión documentada del 90,1 % en el top-5 de los datos de ImageNet, que abarcan aproximadamente 138,4 millones de parámetros. El conjunto de datos ImageNet comprende aproximadamente 14 millones de imágenes categorizadas en 1000 clases. 
-
-Se eligió siguiendo el enfoque de Y. Ghazlane et al. [5] donde emplearon VGG en uno de sus experimentos para la clasificación de aves y drones. Otra razón es que el modelo es más ligero a comparación de otros como DenseNet121, DenseNet201, EfficientNetB1 y EfficientNetB6. 
-
 El modelo tiene la siguiente arquitectura:
 
 * Modelo VGG19 con los pesos de ImageNet, congelados (no se actualizan durante el entrenamiento)
