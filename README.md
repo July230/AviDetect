@@ -242,6 +242,68 @@ Sin embargo, comparándolo con el estado del arte en el problema de clasificaci�
 
 Basado en estas observaciones, los siguientes pasos propuestos son incrementar la complejidad del modelo mediante la incorporación de aprendizaje transferido usando alguna de las arquitecturas existentes como VGG16, VGG19, InceptionV3, RestNet, EfficientNetB4, entre otros.
 
+## Tercera iteración
+Se realizaron experimentos con los modelos preentrenados InceptionV3, ResNet50 y VGG19 [5] [6] [9], con la misma arquitectura. De los tres, VGG19 obtuvo resultados mejores y estables.
+
+### Descripción del modelo
+La arquitectura VGG se erige como un notable modelo CNN introducido por los investigadores Karen Simonyan y Andrew Zisserman en su paper *Very deep convolutional networks for large-scale image recognition*. Se basa en su predecesor, el modelo AlexNet. Ha alcanzado una precisión documentada del 90,1 % en el top-5 de los datos de ImageNet, que abarcan aproximadamente 138,4 millones de parámetros. El conjunto de datos ImageNet comprende aproximadamente 14 millones de imágenes categorizadas en 1000 clases. 
+
+Se eligió siguiendo el enfoque de Y. Ghazlane et al. [5] y  donde emplearon VGG en uno de sus experimentos para la clasificación de aves y drones. Otra razón es que el modelo es más ligero a comparación de otros como DenseNet 121, DenseNet201, EfficientNetB1 y EfficientNetB6. 
+
+El modelo tiene la siguiente arquitectura:
+
+* Modelo VGG19 con los pesos de ImageNet, congelados (no se actualizan durante el entrenamiento)
+* GlobalAveragePooling2D layer: Reducir el mapa de características a un vector 1D
+* Dropout layer: Con una tasa de 0.2
+* Dense layer: Con 128 neuronas y función de activación ReLU y kernel_regularizer l2(0.1)
+* Dropout layer: Con una tasa de 0.2
+* Dense layer: Con 1 neurona y función de activación sigmoid
+
+Hiperparámetros:
+* loss: binary_crossentropy
+* Epochs: 14
+* Optimizer: Adam
+* learning rate: 0.0001
+* Batch size: 16
+
+Para este caso ya no es necesario usar una Flatten layer.
+
+### Resultados
+Los resultados fueron medidos para el mejor modelo en toda la historia de las 10 épocas.
+
+| Métrica   | Train | Validation | Test   |
+|---------- | ----- | ---------- | ------ |
+| Loss      | 0.31  |    2.19    | 1.82   |
+| Acuracy   | 0.87  |    0.76    | 0.75   |
+| Precision |       |    0.97    | 0.97   |
+| Recall    |       |    0.62    | 0.61   |
+| F1-score  |       |    0.76    | 0.75   |
+
+### Matrices de confusión
+
+<div align="center">
+  <img src="./resources/confusionMatrixValVGGModel.png" alt="Figura 10: Matriz de confusión del conjunto de validación">
+  <em>Figura 10: Matriz de confusión del conjunto de validación</em>
+</div>
+<br>
+<div align="center">
+  <img src="./resources/confusionMatrixTestVGGModel.png" alt="Figura 11: Matriz de confusión del conjunto de prueba">
+  <em>Figura 11: Matriz de confusión del conjunto de prueba</em>
+</div>
+<br>
+
+### Conclusiones
+El modelo que obtuvo mejores resultados fue VGG19, cuyas métricas muestran un comportamiento similar en los conjuntos de validación y prueba con valores cercanos al 76%, lo que indica que su capacidad para discriminar entre ambas clases no fue mejor al modelo con arquitectura modificada.
+
+En los conjuntos de validación y prueba casi no se registraron falsos positivos, lo que llevó a una precisión aproximada de 97%. Sin embargo, el recall decreció a valores cercanos al 62%, lo que significa que hubo más aves identificadas correctamente pero al mismo tiempo hubo más drones clasificadas incorrectamente.
+
+Estos resultados implican que el modelo con transfer learning no tuvo una mejora significativa con respecto al anterior, contando con más falsos positivos. En consecuencia, el valor de F1-score decreció ligeramente a aproximadamente 76%, lo que revela un equilibrio peor.
+
+Comparándolo con el estado del arte en el problema de clasificación de aves y drones [5] [7] [8], el modelo es insuficiente para llegar a una buena solución.
+
+# Discusiones
+Comparando los modelos de la segunda y tercera iteración con el estado del arte del problema [5] [7] [8], el modelo no es capaz de aprender características que lo lleven a alcanzar las mátricas esperadas. En este [notebook](https://www.kaggle.com/code/arifagustyawan/0-97-drone-vs-bird-classification-resnet) el autor fue capaz de alcanzar un F1-score aproximado de 96%, lo que logró usando el modelo ResNet50 con transfer learning y data augmentation (Normalización de imágenes, espejo horizontal y rotaciones). Los modelos que han tenido mejores resultados en el problema son ResNet152, DenseNet121, DenseNet201, EfficientB1 y EfficientB6 [5]. Tomando en cuenta los datasets usados y los criterios de data augmentation, es probale que un cambio en la forma de preprocesamiento sea más efectivo que modificar el modelo.
+
 # Referencias
 [1] Mary, "Kaggle: todo lo que hay que saber sobre esta plataforma," *Liora*, Feb. 25, 2026, [Online]. Available: https://liora.io/es/kaggle-todo-lo-que-hay-que-saber-sobre-esta-plataforma
 
