@@ -248,14 +248,14 @@ Se realizaron experimentos con los modelos preentrenados InceptionV3, ResNet50 y
 ### Descripción del modelo
 La arquitectura VGG se erige como un notable modelo CNN introducido por los investigadores Karen Simonyan y Andrew Zisserman en su paper *Very deep convolutional networks for large-scale image recognition*. Se basa en su predecesor, el modelo AlexNet. Ha alcanzado una precisión documentada del 90,1 % en el top-5 de los datos de ImageNet, que abarcan aproximadamente 138,4 millones de parámetros. El conjunto de datos ImageNet comprende aproximadamente 14 millones de imágenes categorizadas en 1000 clases. 
 
-Se eligió siguiendo el enfoque de Y. Ghazlane et al. [5] y  donde emplearon VGG en uno de sus experimentos para la clasificación de aves y drones. Otra razón es que el modelo es más ligero a comparación de otros como DenseNet 121, DenseNet201, EfficientNetB1 y EfficientNetB6. 
+Se eligió siguiendo el enfoque de Y. Ghazlane et al. [5] y  donde emplearon VGG en uno de sus experimentos para la clasificación de aves y drones. Otra razón es que el modelo es más ligero a comparación de otros como DenseNet121, DenseNet201, EfficientNetB1 y EfficientNetB6. 
 
 El modelo tiene la siguiente arquitectura:
 
 * Modelo VGG19 con los pesos de ImageNet, congelados (no se actualizan durante el entrenamiento)
 * GlobalAveragePooling2D layer: Reducir el mapa de características a un vector 1D
 * Dropout layer: Con una tasa de 0.2
-* Dense layer: Con 128 neuronas y función de activación ReLU y kernel_regularizer l2(0.1)
+* Dense layer: Con 128 neuronas y función de activación ReLU
 * Dropout layer: Con una tasa de 0.2
 * Dense layer: Con 1 neurona y función de activación sigmoid
 
